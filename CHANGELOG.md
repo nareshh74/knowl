@@ -3,6 +3,29 @@
 Notable changes to `@dat999zx/knowl`. Versions before 2.1.0 predate this file; see the
 [git tags](https://github.com/dat999zx/knowl/tags) for that history.
 
+## 5.28.0 - 2026-10-19
+
+### Fix: memory tools work from a folder with no project, and `knowl_update` reaches global atoms
+
+- With `knowl serve` started in a folder that is not a Knowl project (your home directory, for
+  example), `knowl_update` and a dozen sibling tools failed with `Database has not been initialized`
+  even though `knowl_query` and `knowl_store` worked. `knowl_update`, `knowl_ingest_atoms`,
+  `knowl_decide`, `knowl_timeline`, `knowl_evidence_list`, `knowl_feedback`, `knowl_conflicts`,
+  `knowl_context`, `knowl_synthesize`, `knowl_session_finish`, `knowl_gc_preview`, `knowl_gc_apply`
+  and the `knowl_task_*` tools now run against the global store there.
+- `knowl_update`, `knowl_evidence_list` and `knowl_feedback` also reach a global atom from inside a
+  project. Before, an id that search had just returned from the global store failed with "not found".
+
+### Change: skills run without `knowl skill approve`
+
+- A skill used to refuse to run until `knowl skill approve <name>` had pinned its exact bytes, a
+  second prompt after the one your agent host already shows before it runs anything. `knowl skill
+  run` and `knowl_skill_run` now run a skill straight away, whoever created it, and the resolved
+  command is still printed first. Editing a skill no longer needs a new approval.
+- `knowl config set trust.autoApproveSkills false` restores the old behaviour in full: nothing runs
+  until `knowl skill approve` has pinned its bytes. Set it to `false` in a repository whose skills
+  you did not write. Unset counts as on.
+
 ## 5.27.0 - 2026-10-19
 
 ### Feature: transcript search and extraction now read GitHub Copilot CLI and Hermes Agent sessions
